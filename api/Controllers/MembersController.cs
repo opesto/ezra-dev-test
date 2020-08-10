@@ -35,19 +35,38 @@ namespace EzraTest.Controllers
 
         // TODO
         // Choose a http method and route and complete the method
-        public void AddMember(Member member)
+        [HttpPost]
+        [Route("addMember/{name}/{email}")]
+        public void AddMember(string name, string email)
+        {
+            Member newMember = new Member {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Email = email
+            };
+            AddMember(newMember);
+        }
+
+        private void AddMember(Member member)
         {
             _membersRepository.AddMember(member);
         }
 
-        // TODO
+        [HttpPatch]
+        [Route("update/{id}/{name}/{email}")]
+        public void UpdateMember(Guid id, string name, string email) 
+        {
+            UpdateMember(id, new Member() { Id = id, Name = name, Email = email});
+        }
+
         // Choose a http method and route and complete the method
-        public void UpdateMember(Guid id, Member member)
+        private void UpdateMember(Guid id, Member member)
         {
             _membersRepository.UpdateMember(id, member);
         }
 
-        // TODO
+        [HttpDelete]
+        [Route("delete/{id}")]
         // Choose a http method and route and complete the method
         public void DeleteMember(Guid id)
         {

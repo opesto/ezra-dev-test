@@ -6,6 +6,7 @@ using EzraTest.Models;
 
 using Microsoft.Data.Sqlite;
 
+
 namespace EzraTest.DB
 {
     public class MembersRepository : IMembersRepository
@@ -48,22 +49,62 @@ namespace EzraTest.DB
         /// <inheritdoc />
         public void AddMember(Member member)
         {
-            // TODO
-            throw new NotImplementedException();
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                String query = "INSERT INTO MEMBERS (Id,Name,Email) VALUES (@Id,@Name,@Email)";
+                var command = connection.CreateCommand();
+                command.Parameters.AddWithValue("@Id", member.Id);
+                command.Parameters.AddWithValue("@Name", member.Name);
+                command.Parameters.AddWithValue("@Email", member.Email);
+                command.CommandText = query;
+                int result = command.ExecuteNonQuery();
+                // Check Error
+                if(result < 0) {
+                    Console.WriteLine("Error inserting data into Database!");
+                }
+            }
         }
 
         /// <inheritdoc />
         public void UpdateMember(Guid id, Member member)
         {
-            // TODO
-            throw new NotImplementedException();
+             using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                String query = "UPDATE MEMBERS SET Name = @Name, Email = @Email WHERE Id = @Id";
+                var command = connection.CreateCommand();
+                command.Parameters.AddWithValue("@Name", member.Name);
+                command.Parameters.AddWithValue("@Email", member.Email);
+                command.Parameters.AddWithValue("@Id", id);
+                command.CommandText = query;
+                int result = command.ExecuteNonQuery();
+                // Check Error
+                if(result < 0) {
+                    Console.Write("Error inserting data into Database!");
+                }
+                connection.Close();
+            }
         }
 
         /// <inheritdoc />
         public void DeleteMember(Guid id)
         {
-            // TODO
-            throw new NotImplementedException();
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                String query = "DELETE FROM MEMBERS WHERE Id = @Id";
+                var command = connection.CreateCommand();
+                command.Parameters.AddWithValue("@Id", id);
+                command.CommandText = query;
+                int result = command.ExecuteNonQuery();
+                // Check Error
+                if(result < 0) {
+                    Console.Write("Error inserting data into Database!");
+                }
+                connection.Close();
+            }
         }
 
         private IEnumerable<T> ExecuteQuery<T>(string commandText, Func<SqliteDataReader, T> func)
