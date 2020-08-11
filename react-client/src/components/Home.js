@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 
 import './Home.css'
+import { AddMember } from './AddMember'
+import { Link } from 'react-router-dom'
 
 export class Home extends Component {
   static displayName = Home.name
 
   constructor(props) {
     super(props)
-    this.state = { members: [], loading: true }
+    this.state = { 
+      members: [], 
+      loading: true,
+
+    }
   }
 
   componentDidMount() {
@@ -38,12 +44,11 @@ export class Home extends Component {
                 >
                   <img src="/delete.svg" width="12px" height="12px" />
                 </button>
-                <button
+                <Link
                   className="img-btn btn-link"
-                  onClick={() => this.editMember(member.id)}
-                >
+                  to={{ pathname:'/edit-member', state : { member : member}}}>
                   <img src="/edit.svg" width="12px" height="12px" />
-                </button>
+                </Link>
               </td>
             </tr>
           ))}
@@ -77,12 +82,13 @@ export class Home extends Component {
   }
 
   async deleteMember(memberId) {
-    // TODO
-    throw 'Implement me'
-  }
-
-  async editMember(memberId) {
-    // TODO
-    throw 'Implement me'
-  }
+    try {
+      const response = await fetch('http://localhost:5000/members/delete/'+memberId, {
+        method: 'Delete',
+      });
+      this.populateMembers();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 }

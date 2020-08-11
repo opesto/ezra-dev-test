@@ -40,7 +40,7 @@ namespace EzraTest
 
             app.UseCors(policy =>
             {
-                policy.AllowAnyOrigin();
+                policy.WithOrigins("http://localhost:3000").WithMethods("GET", "POST", "DELETE", "PATCH");
             });
 
             app.UseEndpoints(endpoints =>
